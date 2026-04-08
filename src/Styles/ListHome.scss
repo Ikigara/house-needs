@@ -1,0 +1,17 @@
+.header-line {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.header-line .line {
+  flex: 1; /* stretches line to fill space */
+  height: 2px; /* line thickness */
+  background-color: black;
+}
+
+.header-line p {
+  margin: 0 10px; /* spacing between text and lines */
+  font-weight: bold;
+  white-space: nowrap;
+}
