@@ -1,121 +1,122 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+
+const users = [
+  { name: 'Emilia', img: 'https://i.pravatar.cc/40?img=2' },
+  { name: 'Maja', img: 'https://i.pravatar.cc/40?img=3' },
+  { name: 'Krzysiek', img: 'https://i.pravatar.cc/40?img=4' },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState([
+    { text: 'Buy almond milk', time: 'Today • 17:00', user: users[0] },
+  ]);
+
+  const [showModal, setShowModal] = useState(false);
+  const [taskText, setTaskText] = useState('');
+  const [selectedUser, setSelectedUser] = useState(users[0]);
+  const [dueDate, setDueDate] = useState('Today');
+
+  const addTask = () => {
+    if (!taskText) return;
+
+    setTasks([
+      ...tasks,
+      {
+        text: taskText,
+        time: dueDate,
+        user: selectedUser,
+      },
+    ]);
+
+    setTaskText('');
+    setShowModal(false);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className='app'>
+      {/* Header */}
+      <header className='header'>
+        <h1>
+          The <span>Ikigara</span> Household
+        </h1>
+      </header>
 
-      <div className="ticks"></div>
+      {/* Tasks */}
+      <section className='section'>
+        <h3>Tasks</h3>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+        <div className='tasks'>
+          {tasks.map((task, i) => (
+            <div key={i} className='task'>
+              <input type='checkbox' />
+              <div>
+                <p>{task.text}</p>
+                <span>{task.time}</span>
+              </div>
+              <img src={task.user.img} />
+            </div>
+          ))}
         </div>
       </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* ➕ Floating Button */}
+      <button className='fab' onClick={() => setShowModal(true)}>
+        +
+      </button>
+
+      {/* Modal */}
+      {showModal && (
+        <div className='modal-overlay' onClick={() => setShowModal(false)}>
+          <div className='modal' onClick={(e) => e.stopPropagation()}>
+            <h3>Task</h3>
+
+            <input
+              className='input'
+              placeholder='Send invites for game night'
+              value={taskText}
+              onChange={(e) => setTaskText(e.target.value)}
+            />
+
+            {/* Assign user */}
+            <h4>Person assigned</h4>
+            <div className='avatars'>
+              {users.map((user, i) => (
+                <img
+                  key={i}
+                  src={user.img}
+                  className={
+                    selectedUser.name === user.name
+                      ? 'avatar selected'
+                      : 'avatar'
+                  }
+                  onClick={() => setSelectedUser(user)}
+                />
+              ))}
+            </div>
+
+            {/* Due date */}
+            <h4>Due Date</h4>
+            <div className='dates'>
+              {['Today', 'Tomorrow', 'Custom'].map((d) => (
+                <button
+                  key={d}
+                  className={dueDate === d ? 'date active' : 'date'}
+                  onClick={() => setDueDate(d)}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+
+            <button className='add-btn' onClick={addTask}>
+              Add Task
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
