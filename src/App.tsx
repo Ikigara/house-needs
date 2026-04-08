@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 
 const users = [
@@ -9,13 +9,23 @@ const users = [
 
 function App() {
   const [tasks, setTasks] = useState([
-    { text: 'Buy almond milk', time: 'Today • 17:00', user: users[0] },
+    {
+      text: 'Buy almond milk',
+      time: 'Today • 17:00',
+      user: users[0],
+      completed: false,
+      completedBy: null,
+      completedAt: null,
+      archived: false,
+    },
   ]);
 
   const [showModal, setShowModal] = useState(false);
   const [taskText, setTaskText] = useState('');
   const [selectedUser, setSelectedUser] = useState(users[0]);
   const [dueDate, setDueDate] = useState('Today');
+
+  const touchStartX = useRef(0);
 
   const addTask = () => {
     if (!taskText) return;
@@ -26,6 +36,10 @@ function App() {
         text: taskText,
         time: dueDate,
         user: selectedUser,
+        completed: false,
+        completedBy: null,
+        completedAt: null,
+        archived: false,
       },
     ]);
 
@@ -33,34 +47,88 @@ function App() {
     setShowModal(false);
   };
 
+  const toggleTask = (index: number) => {
+    const updated = [...tasks];
+
+    if (!updated[index].completed) {
+      updated[index].completed = true;
+      updated[index].completedBy = selectedUser.name;
+      updated[index].completedAt = 'Today';
+    } else {
+      updated[index].completed = false;
+      updated[index].completedBy = null;
+      updated[index].completedAt = null;
+    }
+
+    setTasks(updated);
+  };
+
+  const handleTouchStart = (e: any) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: any, index: number) => {
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+
+    // Swipe left threshold
+    if (diff > 80) {
+      const updated = [...tasks];
+
+      if (updated[index].completed) {
+        updated[index].archived = true;
+        setTasks(updated);
+      }
+    }
+  };
+
   return (
     <div className='app'>
-      {/* Header */}
       <header className='header'>
         <h1>
-          The <span>Ikigara</span> Household
+          Room<span>mmeez</span>
         </h1>
       </header>
 
-      {/* Tasks */}
       <section className='section'>
         <h3>Tasks</h3>
 
         <div className='tasks'>
-          {tasks.map((task, i) => (
-            <div key={i} className='task'>
-              <input type='checkbox' />
-              <div>
-                <p>{task.text}</p>
-                <span>{task.time}</span>
+          {tasks
+            .filter((t) => !t.archived)
+            .map((task, i) => (
+              <div
+                key={i}
+                className={`task ${task.completed ? 'done' : ''}`}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, i)}
+              >
+                <input
+                  type='checkbox'
+                  checked={task.completed}
+                  onChange={() => toggleTask(i)}
+                />
+
+                <div>
+                  <p className={task.completed ? 'completed' : ''}>
+                    {task.text}
+                  </p>
+
+                  {!task.completed && <span>{task.time}</span>}
+
+                  {task.completed && (
+                    <span className='completed-meta'>
+                      Completed {task.completedAt} by {task.completedBy}
+                    </span>
+                  )}
+                </div>
+
+                <img src={task.user.img} />
               </div>
-              <img src={task.user.img} />
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 
-      {/* ➕ Floating Button */}
+      {/* Add Button */}
       <button className='fab' onClick={() => setShowModal(true)}>
         +
       </button>
@@ -73,12 +141,11 @@ function App() {
 
             <input
               className='input'
-              placeholder='Send invites for game night'
+              placeholder='Task name...'
               value={taskText}
               onChange={(e) => setTaskText(e.target.value)}
             />
 
-            {/* Assign user */}
             <h4>Person assigned</h4>
             <div className='avatars'>
               {users.map((user, i) => (
@@ -95,7 +162,6 @@ function App() {
               ))}
             </div>
 
-            {/* Due date */}
             <h4>Due Date</h4>
             <div className='dates'>
               {['Today', 'Tomorrow', 'Custom'].map((d) => (
