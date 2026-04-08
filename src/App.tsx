@@ -52,7 +52,9 @@ function App() {
 
     if (!updated[index].completed) {
       updated[index].completed = true;
+      // @ts-ignore
       updated[index].completedBy = selectedUser.name;
+      // @ts-ignore
       updated[index].completedAt = 'Today';
     } else {
       updated[index].completed = false;
