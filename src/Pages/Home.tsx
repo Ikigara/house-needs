@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react'
+import { useState, useRef } from 'react';
 
 const users = [
   { name: 'Emilia', img: 'https://i.pravatar.cc/40?img=2' },
