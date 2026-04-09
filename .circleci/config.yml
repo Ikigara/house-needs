@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  node: circleci/node@5
-
 jobs:
   lint:
     docker:
@@ -10,14 +7,14 @@ jobs:
     steps:
       - checkout
 
-   - run:
-    name: Setup PNPM
-    command: |
-      corepack prepare pnpm@latest --activate
+      - run:
+          name: Setup PNPM
+          command: |
+            corepack prepare pnpm@latest --activate
 
-- run:
-    name: Install dependencies
-    command: pnpm install
+      - run:
+          name: Install dependencies
+          command: pnpm install
 
       - run:
           name: Run linter
@@ -30,8 +27,9 @@ jobs:
       - checkout
 
       - run:
-          name: Enable PNPM
-          command: corepack enable
+          name: Setup PNPM
+          command: |
+            corepack prepare pnpm@latest --activate
 
       - run:
           name: Install dependencies
@@ -51,8 +49,9 @@ jobs:
       - checkout
 
       - run:
-          name: Enable PNPM
-          command: corepack enable
+          name: Setup PNPM
+          command: |
+            corepack prepare pnpm@latest --activate
 
       - run:
           name: Install dependencies
@@ -88,4 +87,3 @@ workflows:
           filters:
             branches:
               only: prod
-# test trigger
