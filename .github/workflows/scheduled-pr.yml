@@ -1,0 +1,25 @@
+name: Schedule PR from Preview to Prod
+
+on:
+  schedule:
+    - cron: '0 0 1,15 * *'
+  workflow_dispatch: # Optional: allows manual triggering
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: 'Automated PR: Preview to Prod'
+          branch: preview
+          base: prod
+          commit-message: 'Sync changes from preview to prod'
+          labels: 'automated'
+          body: |
+            This pull request is automatically created on a schedule to promote changes from the preview branch to the production branch. Please review before merging.

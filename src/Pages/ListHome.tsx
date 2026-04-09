@@ -1,37 +1,37 @@
-import { useState } from "react";
-import "../Styles/ListHome.scss";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { useState } from 'react';
+import '../Styles/ListHome.scss';
+import { BsThreeDotsVertical } from 'react-icons/bs';
 
 function ListHome() {
   // mock data
   const [items, setItems] = useState([
     {
       id: 1,
-      text: "Milk",
+      text: 'Milk',
       completed: true,
       completedAt: Date.now() - 2 * 60 * 60 * 1000,
       completedBy: {
-        name: "Doron",
-        avatar: "https://i.pravatar.cc/30?img=1",
+        name: 'Doron',
+        avatar: 'https://i.pravatar.cc/30?img=1',
       },
     },
     {
       id: 2,
-      text: "Eggs",
+      text: 'Eggs',
       completed: false,
       completedAt: null,
     }, // 2 hrs ago
     {
       id: 3,
-      text: "Bread",
+      text: 'Bread',
       completed: false,
       completedAt: null,
     }, // 30 hrs ago (should NOT show)
-    { id: 4, text: "Chicken", completed: false, completedAt: null },
+    { id: 4, text: 'Chicken', completed: false, completedAt: null },
   ]);
 
-  const handleDotsClick = (id) => {
-    console.log("Clicked item:", id);
+  const handleDotsClick = (id: number) => {
+    console.log('Clicked item:', id);
     // later: open menu, edit, delete, etc.
   };
 
@@ -43,13 +43,13 @@ function ListHome() {
 
   const gotIt = items.filter(
     (item) =>
-      item.completed && item.completedAt && now - item.completedAt <= ONE_DAY,
+      item.completed && item.completedAt && now - item.completedAt <= ONE_DAY
   );
 
   // toggle complete
   const currentUser = {
-    name: "Doron",
-    avatar: "https://i.pravatar.cc/30?img=1",
+    name: 'Doron',
+    avatar: 'https://i.pravatar.cc/30?img=1',
   };
 
   // @ts-ignore
@@ -64,40 +64,40 @@ function ListHome() {
               completedAt: !item.completed ? Date.now() : null,
               completedBy: !item.completed ? currentUser : null,
             }
-          : item,
-      ),
+          : item
+      )
     );
   };
 
-  const formatTime = (timestamp) => {
-    if (!timestamp) return "";
+  const formatTime = (timestamp: any) => {
+    if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
   return (
-    <div className="listPage">
+    <div className='listPage'>
       <h3>House Need</h3>
       {/* NEEDS */}
-      <div className="header-line">
-        <span className="line"></span>
-        <p style={{ color: "red" }}>Needs</p>
-        <span className="line"></span>
+      <div className='header-line'>
+        <span className='line'></span>
+        <p style={{ color: 'red' }}>Needs</p>
+        <span className='line'></span>
       </div>
 
-      <div className="needItems">
+      <div className='needItems'>
         {needs.map((item) => (
-          <div key={item.id} className="item-row">
+          <div key={item.id} className='item-row'>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={item.completed}
               onChange={() => handleCheck(item.id)}
             />
             <p>{item.text}</p>
             <button
-              className="dots-btn"
+              className='dots-btn'
               onClick={() => handleDotsClick(item.id)}
             >
               <BsThreeDotsVertical size={15} />
@@ -107,31 +107,31 @@ function ListHome() {
       </div>
 
       {/* GOT IT */}
-      <div className="header-line">
-        <span className="line"></span>
-        <p style={{ color: "green" }}>Got It</p>
-        <span className="line"></span>
+      <div className='header-line'>
+        <span className='line'></span>
+        <p style={{ color: 'green' }}>Got It</p>
+        <span className='line'></span>
       </div>
 
-      <div className="completedItems">
+      <div className='completedItems'>
         {gotIt.map((item) => (
-          <div key={item.id} className="item-row">
-            <div className="itemCompleted">
+          <div key={item.id} className='item-row'>
+            <div className='itemCompleted'>
               <input
-                type="checkbox"
+                type='checkbox'
                 checked={item.completed}
                 onChange={() => handleCheck(item.id)}
               />
               <div>
-                <p className="completed-text">{item.text}</p>
-                <div className="meta">
+                <p className='completed-text'>{item.text}</p>
+                <div className='meta'>
                   <img
                     src={item.completedBy?.avatar}
-                    alt="user"
-                    className="avatar"
+                    alt='user'
+                    className='avatar'
                   />
                   <span>{item.completedBy?.name}</span>
-                  <span className="time">{formatTime(item.completedAt)}</span>
+                  <span className='time'>{formatTime(item.completedAt)}</span>
                 </div>
               </div>
             </div>
@@ -149,7 +149,7 @@ function ListHome() {
             </div> */}
 
             <button
-              className="dots-btn"
+              className='dots-btn'
               onClick={() => handleDotsClick(item.id)}
             >
               <BsThreeDotsVertical size={15} />
