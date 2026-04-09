@@ -15,15 +15,16 @@ function App() {
   const handleAddItem = () => {
     if (!newItem.text) return;
 
-    const newEntry = {
-      id: Date.now(),
-      text: newItem.text,
-      category: newItem.category,
-      store: newItem.store,
-      completed: false,
-      completedAt: null,
-      completedBy: null,
-    };
+    // @ts-ignore
+    // const newEntry = {
+    //   id: Date.now(),
+    //   text: newItem.text,
+    //   category: newItem.category,
+    //   store: newItem.store,
+    //   completed: false,
+    //   completedAt: null,
+    //   completedBy: null,
+    // };
 
     // setItems((prev) => [...prev, newEntry]);
 
