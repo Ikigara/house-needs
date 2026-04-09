@@ -1,17 +1,17 @@
-
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import ListHome from './Pages/ListHome';
-
+import { useState } from 'react';
 
 function App() {
   const [showForm, setShowForm] = useState(false);
 
   const [newItem, setNewItem] = useState({
-    text: "",
-    category: "",
-    store: "",
+    text: '',
+    category: '',
+    store: '',
   });
+
   const handleAddItem = () => {
     if (!newItem.text) return;
 
@@ -25,41 +25,41 @@ function App() {
       completedBy: null,
     };
 
-    setItems((prev) => [...prev, newEntry]);
+    // setItems((prev) => [...prev, newEntry]);
 
     // reset + close
-    setNewItem({ text: "", category: "", store: "" });
+    setNewItem({ text: '', category: '', store: '' });
     setShowForm(false);
   };
   return (
     <div>
-      <header className="header">
+      <header className='header'>
         <h1>
           Room<span>mmeez</span>
         </h1>
       </header>
       <Routes>
-        <Route path="/" element={<ListHome />} />
+        <Route path='/' element={<ListHome />} />
         {/* <Route path="/list" element={<ListHome />} /> */}
       </Routes>
-      <button className="add-btn" onClick={() => setShowForm(true)}>
+      <button className='add-btn' onClick={() => setShowForm(true)}>
         +
       </button>
       {showForm && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className='modal-overlay'>
+          <div className='modal'>
             <h3>Add Item</h3>
 
             <input
-              type="text"
-              placeholder="Item (e.g. Milk)"
+              type='text'
+              placeholder='Item (e.g. Milk)'
               value={newItem.text}
               onChange={(e) => setNewItem({ ...newItem, text: e.target.value })}
             />
 
             <input
-              type="text"
-              placeholder="Category (e.g. Fruit, Cleaning)"
+              type='text'
+              placeholder='Category (e.g. Fruit, Cleaning)'
               value={newItem.category}
               onChange={(e) =>
                 setNewItem({ ...newItem, category: e.target.value })
@@ -67,15 +67,15 @@ function App() {
             />
 
             <input
-              type="text"
-              placeholder="Recommended Store (optional)"
+              type='text'
+              placeholder='Recommended Store (optional)'
               value={newItem.store}
               onChange={(e) =>
                 setNewItem({ ...newItem, store: e.target.value })
               }
             />
 
-            <div className="modal-actions">
+            <div className='modal-actions'>
               <button onClick={handleAddItem}>Add</button>
               <button onClick={() => setShowForm(false)}>Cancel</button>
             </div>
@@ -83,7 +83,6 @@ function App() {
         </div>
       )}
     </div>
-
   );
 }
 
