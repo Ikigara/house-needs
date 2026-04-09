@@ -12,9 +12,11 @@ function App() {
     category: '',
     store: '',
   });
+
   const handleAddItem = () => {
     if (!newItem.text) return;
 
+    // @ts-ignore
     // const newEntry = {
     //   id: Date.now(),
     //   text: newItem.text,
@@ -24,6 +26,8 @@ function App() {
     //   completedAt: null,
     //   completedBy: null,
     // };
+
+    // setItems((prev) => [...prev, newEntry]);
 
     // reset + close
     setNewItem({ text: '', category: '', store: '' });

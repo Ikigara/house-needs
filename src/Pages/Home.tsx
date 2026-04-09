@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import "../Styles/Home.scss";
 
+
 const users = [
   { name: "Emilia", img: "https://i.pravatar.cc/40?img=2" },
   { name: "Maja", img: "https://i.pravatar.cc/40?img=3" },

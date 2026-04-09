@@ -30,7 +30,7 @@ function ListHome() {
     { id: 4, text: 'Chicken', completed: false, completedAt: null },
   ]);
 
-  const handleDotsClick = (id: number) => {
+  const handleDotsClick = (id: number | string) => {
     console.log('Clicked item:', id);
     // later: open menu, edit, delete, etc.
   };
@@ -69,6 +69,7 @@ function ListHome() {
     );
   };
 
+  // @ts-ignore
   const formatTime = (timestamp: any) => {
     if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString([], {
