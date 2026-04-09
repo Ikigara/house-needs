@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../Styles/ListHome.scss';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { requestNotificationPermission } from '../../firebase'; // 👈 updated import
 
 function ListHome() {
   // mock data
@@ -87,6 +88,15 @@ function ListHome() {
         <p style={{ color: 'red' }}>Needs</p>
         <span className='line'></span>
       </div>
+
+      <button
+        onClick={async () => {
+          const token = await requestNotificationPermission();
+          console.log('Token:', token);
+        }}
+      >
+        Enable Notifications
+      </button>
 
       <div className='needItems'>
         {needs.map((item) => (

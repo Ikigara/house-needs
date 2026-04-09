@@ -14,34 +14,34 @@ function App() {
   });
 
   // 🔔 Setup notifications + token
-  useEffect(() => {
-    const setupNotifications = async () => {
-      try {
-        const token = await requestNotificationPermission();
+  // useEffect(() => {
+  //   const setupNotifications = async () => {
+  //     try {
+  //       const token = await requestNotificationPermission();
 
-        if (!token) return;
+  //       if (!token) return;
 
-        // send token to backend
-        await fetch('/api/save-token', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            token,
-            // OPTIONAL (recommended later)
-            userId: 'demo-user-1',
-          }),
-        });
+  //       // send token to backend
+  //       await fetch('/api/save-token', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           token,
+  //           // OPTIONAL (recommended later)
+  //           userId: 'demo-user-1',
+  //         }),
+  //       });
 
-        console.log('✅ Token saved to backend');
-      } catch (err) {
-        console.error('Notification setup error:', err);
-      }
-    };
+  //       console.log('✅ Token saved to backend');
+  //     } catch (err) {
+  //       console.error('Notification setup error:', err);
+  //     }
+  //   };
 
-    setupNotifications();
-  }, []);
+  //   setupNotifications();
+  // }, []);
 
   const handleAddItem = () => {
     if (!newItem.text) return;
