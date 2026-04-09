@@ -9,8 +9,7 @@ jobs:
 
       - run:
           name: Setup PNPM
-          command: |
-            corepack prepare pnpm@latest --activate
+          command: npm install -g pnpm
 
       - run:
           name: Install dependencies
@@ -28,8 +27,7 @@ jobs:
 
       - run:
           name: Setup PNPM
-          command: |
-            corepack prepare pnpm@latest --activate
+          command: npm install -g pnpm
 
       - run:
           name: Install dependencies
@@ -50,8 +48,7 @@ jobs:
 
       - run:
           name: Setup PNPM
-          command: |
-            corepack prepare pnpm@latest --activate
+          command: npm install -g pnpm
 
       - run:
           name: Install dependencies
