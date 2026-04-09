@@ -10,7 +10,7 @@ jobs:
       - run:
           name: Setup PNPM
           command: |
-            corepack prepare pnpm@latest --activate
+            npm install -g pnpm
 
       - run:
           name: Install dependencies
