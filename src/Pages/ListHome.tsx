@@ -70,7 +70,7 @@ function ListHome() {
   };
 
   // @ts-ignore
-  const formatTime = (timestamp) => {
+  const formatTime = (timestamp: any) => {
     if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString([], {
       hour: '2-digit',
