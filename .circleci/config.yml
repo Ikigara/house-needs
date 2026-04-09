@@ -1,0 +1,89 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/node:23.0
+    steps:
+      - checkout
+
+      - run:
+          name: Enable PNPM
+          command: corepack enable
+
+      - run:
+          name: Install dependencies
+          command: pnpm install
+
+      - run:
+          name: Run linter
+          command: pnpm run lint
+
+  deploy_preview:
+    docker:
+      - image: cimg/node:23.0
+    steps:
+      - checkout
+
+      - run:
+          name: Enable PNPM
+          command: corepack enable
+
+      - run:
+          name: Install dependencies
+          command: pnpm install
+
+      - run:
+          name: Deploy to Vercel (Preview)
+          command: |
+            pnpm dlx vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+            pnpm dlx vercel build --token=$VERCEL_TOKEN
+            pnpm dlx vercel deploy --prebuilt --token=$VERCEL_TOKEN
+
+  deploy_prod:
+    docker:
+      - image: cimg/node:23.0
+    steps:
+      - checkout
+
+      - run:
+          name: Enable PNPM
+          command: corepack enable
+
+      - run:
+          name: Install dependencies
+          command: pnpm install
+
+      - run:
+          name: Deploy to Vercel (Production)
+          command: |
+            pnpm dlx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+            pnpm dlx vercel build --prod --token=$VERCEL_TOKEN
+            pnpm dlx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+workflows:
+  version: 2
+
+  development:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              only: develop
+
+  preview:
+    jobs:
+      - deploy_preview:
+          filters:
+            branches:
+              only: preview
+
+  production:
+    jobs:
+      - deploy_prod:
+          filters:
+            branches:
+              only: prod
