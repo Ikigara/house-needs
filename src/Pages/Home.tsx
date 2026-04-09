@@ -1,16 +1,17 @@
-import React, { useState,useRef } from 'react'
+import { useState, useRef } from "react";
+import "../Styles/Home.scss";
 
 const users = [
-  { name: 'Emilia', img: 'https://i.pravatar.cc/40?img=2' },
-  { name: 'Maja', img: 'https://i.pravatar.cc/40?img=3' },
-  { name: 'Krzysiek', img: 'https://i.pravatar.cc/40?img=4' },
+  { name: "Emilia", img: "https://i.pravatar.cc/40?img=2" },
+  { name: "Maja", img: "https://i.pravatar.cc/40?img=3" },
+  { name: "Krzysiek", img: "https://i.pravatar.cc/40?img=4" },
 ];
 
 function Home() {
   const [tasks, setTasks] = useState([
     {
-      text: 'Buy almond milk',
-      time: 'Today • 17:00',
+      text: "Buy almond milk",
+      time: "Today • 17:00",
       user: users[0],
       completed: false,
       completedBy: null,
@@ -20,9 +21,9 @@ function Home() {
   ]);
 
   const [showModal, setShowModal] = useState(false);
-  const [taskText, setTaskText] = useState('');
+  const [taskText, setTaskText] = useState("");
   const [selectedUser, setSelectedUser] = useState(users[0]);
-  const [dueDate, setDueDate] = useState('Today');
+  const [dueDate, setDueDate] = useState("Today");
 
   const touchStartX = useRef(0);
 
@@ -42,7 +43,7 @@ function Home() {
       },
     ]);
 
-    setTaskText('');
+    setTaskText("");
     setShowModal(false);
   };
 
@@ -54,7 +55,7 @@ function Home() {
       // @ts-ignore
       updated[index].completedBy = selectedUser.name;
       // @ts-ignore
-      updated[index].completedAt = 'Today';
+      updated[index].completedAt = "Today";
     } else {
       updated[index].completed = false;
       updated[index].completedBy = null;
@@ -83,41 +84,41 @@ function Home() {
   };
 
   return (
-    <div className='app'>
-      <header className='header'>
+    <div className="app">
+      <header className="header">
         <h1>
           Room<span>mmeez</span>
         </h1>
       </header>
 
-      <section className='section'>
+      <section className="section">
         <h3>Tasks</h3>
 
-        <div className='tasks'>
+        <div className="tasks">
           {tasks
             .filter((t) => !t.archived)
             .map((task, i) => (
               <div
                 key={i}
-                className={`task ${task.completed ? 'done' : ''}`}
+                className={`task ${task.completed ? "done" : ""}`}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={(e) => handleTouchEnd(e, i)}
               >
                 <input
-                  type='checkbox'
+                  type="checkbox"
                   checked={task.completed}
                   onChange={() => toggleTask(i)}
                 />
 
                 <div>
-                  <p className={task.completed ? 'completed' : ''}>
+                  <p className={task.completed ? "completed" : ""}>
                     {task.text}
                   </p>
 
                   {!task.completed && <span>{task.time}</span>}
 
                   {task.completed && (
-                    <span className='completed-meta'>
+                    <span className="completed-meta">
                       Completed {task.completedAt} by {task.completedBy}
                     </span>
                   )}
@@ -130,33 +131,33 @@ function Home() {
       </section>
 
       {/* Add Button */}
-      <button className='fab' onClick={() => setShowModal(true)}>
+      <button className="fab" onClick={() => setShowModal(true)}>
         +
       </button>
 
       {/* Modal */}
       {showModal && (
-        <div className='modal-overlay' onClick={() => setShowModal(false)}>
-          <div className='modal' onClick={(e) => e.stopPropagation()}>
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>Task</h3>
 
             <input
-              className='input'
-              placeholder='Task name...'
+              className="input"
+              placeholder="Task name..."
               value={taskText}
               onChange={(e) => setTaskText(e.target.value)}
             />
 
             <h4>Person assigned</h4>
-            <div className='avatars'>
+            <div className="avatars">
               {users.map((user, i) => (
                 <img
                   key={i}
                   src={user.img}
                   className={
                     selectedUser.name === user.name
-                      ? 'avatar selected'
-                      : 'avatar'
+                      ? "avatar selected"
+                      : "avatar"
                   }
                   onClick={() => setSelectedUser(user)}
                 />
@@ -164,11 +165,11 @@ function Home() {
             </div>
 
             <h4>Due Date</h4>
-            <div className='dates'>
-              {['Today', 'Tomorrow', 'Custom'].map((d) => (
+            <div className="dates">
+              {["Today", "Tomorrow", "Custom"].map((d) => (
                 <button
                   key={d}
-                  className={dueDate === d ? 'date active' : 'date'}
+                  className={dueDate === d ? "date active" : "date"}
                   onClick={() => setDueDate(d)}
                 >
                   {d}
@@ -176,7 +177,7 @@ function Home() {
               ))}
             </div>
 
-            <button className='add-btn' onClick={addTask}>
+            <button className="add-btn" onClick={addTask}>
               Add Task
             </button>
           </div>

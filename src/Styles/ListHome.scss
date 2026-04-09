@@ -6,12 +6,131 @@
 
 .header-line .line {
   flex: 1; /* stretches line to fill space */
-  height: 2px; /* line thickness */
-  background-color: black;
+  height: 1px; /* line thickness */
+  background-color: rgb(197, 197, 197);
 }
 
 .header-line p {
   margin: 0 10px; /* spacing between text and lines */
   font-weight: bold;
   white-space: nowrap;
+}
+
+.needItems {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding-bottom: 30px;
+}
+
+.completedItems {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.item-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  outline: 1px solid rgb(225, 225, 225);
+  padding: 1%;
+}
+
+.item-row p {
+  margin: 0;
+}
+
+.dots-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+/* optional hover effect */
+.dots-btn:hover {
+  opacity: 0.6;
+}
+
+.item-row input[type="checkbox"] {
+  appearance: none; /* remove default checkbox */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #adadad;
+  border-radius: 50%; /* makes it a circle */
+  cursor: pointer;
+  position: relative;
+}
+
+/* when checked */
+.item-row input[type="checkbox"]:checked {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* optional checkmark inside */
+.item-row input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.item-row p {
+  color: black;
+}
+
+
+.itemCompleted{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.completed-text {
+  text-decoration: line-through;
+  color: gray;
+}
+
+.completed-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+}
+
+.gotTheItem{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #777;
+  padding-top: 5%;
+}
+
+.avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.time {
+  margin-left: 4px;
 }
