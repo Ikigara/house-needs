@@ -10,13 +10,14 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Enable PNPM
-          command: corepack enable
+   - run:
+    name: Setup PNPM
+    command: |
+      corepack prepare pnpm@latest --activate
 
-      - run:
-          name: Install dependencies
-          command: pnpm install
+- run:
+    name: Install dependencies
+    command: pnpm install
 
       - run:
           name: Run linter
