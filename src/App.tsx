@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import { useState } from 'react';
-// import Home from "./Pages/Home";
+import { useEffect, useState } from 'react';
 import ListHome from './Pages/ListHome';
+import { requestNotificationPermission } from '../firebase'; // 👈 updated import
 
 function App() {
   const [showForm, setShowForm] = useState(false);
@@ -13,26 +13,44 @@ function App() {
     store: '',
   });
 
+  // 🔔 Setup notifications + token
+  useEffect(() => {
+    const setupNotifications = async () => {
+      try {
+        const token = await requestNotificationPermission();
+
+        if (!token) return;
+
+        // send token to backend
+        await fetch('/api/save-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token,
+            // OPTIONAL (recommended later)
+            userId: 'demo-user-1',
+          }),
+        });
+
+        console.log('✅ Token saved to backend');
+      } catch (err) {
+        console.error('Notification setup error:', err);
+      }
+    };
+
+    setupNotifications();
+  }, []);
+
   const handleAddItem = () => {
     if (!newItem.text) return;
-
-    // @ts-ignore
-    // const newEntry = {
-    //   id: Date.now(),
-    //   text: newItem.text,
-    //   category: newItem.category,
-    //   store: newItem.store,
-    //   completed: false,
-    //   completedAt: null,
-    //   completedBy: null,
-    // };
-
-    // setItems((prev) => [...prev, newEntry]);
 
     // reset + close
     setNewItem({ text: '', category: '', store: '' });
     setShowForm(false);
   };
+
   return (
     <div>
       <header className='header'>
@@ -40,13 +58,15 @@ function App() {
           Room<span>mmeez</span>
         </h1>
       </header>
+
       <Routes>
         <Route path='/' element={<ListHome />} />
-        {/* <Route path="/list" element={<ListHome />} /> */}
       </Routes>
+
       <button className='add-btn' onClick={() => setShowForm(true)}>
         +
       </button>
+
       {showForm && (
         <div className='modal-overlay'>
           <div className='modal'>
