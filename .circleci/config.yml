@@ -10,7 +10,10 @@ jobs:
       - run:
           name: Setup PNPM
           command: |
-            npm install -g pnpm
+            corepack enable --install-directory ~/bin
+            echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
+            source $BASH_ENV
+            corepack prepare pnpm@latest --activate
 
       - run:
           name: Install dependencies
@@ -29,13 +32,14 @@ jobs:
       - run:
           name: Setup PNPM
           command: |
+            corepack enable --install-directory ~/bin
+            echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
+            source $BASH_ENV
             corepack prepare pnpm@latest --activate
 
       - run:
           name: Install dependencies
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest --activate
+          command: pnpm install
 
       - run:
           name: Deploy to Vercel (Preview)
@@ -53,6 +57,9 @@ jobs:
       - run:
           name: Setup PNPM
           command: |
+            corepack enable --install-directory ~/bin
+            echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
+            source $BASH_ENV
             corepack prepare pnpm@latest --activate
 
       - run:
