@@ -1,61 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../Styles/ListHome.scss';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { requestNotificationPermission } from '../../firebase'; // 👈 updated import
+import { requestNotificationPermission } from '../../firebase';
+
+interface TodoItem {
+  id: number | string;
+  text: string;
+  completed: boolean;
+  completedAt: number | null;
+  completedBy?: {
+    name: string;
+    avatar: string;
+  } | null;
+}
+
+const INITIAL_ITEMS: TodoItem[] = [
+  {
+    id: 1,
+    text: 'Milk',
+    completed: true,
+    completedAt: Date.now() - 2 * 60 * 60 * 1000,
+    completedBy: {
+      name: 'Doron',
+      avatar: 'https://i.pravatar.cc/30?img=1',
+    },
+  },
+  { id: 2, text: 'Eggs', completed: false, completedAt: null },
+  { id: 3, text: 'Bread', completed: false, completedAt: null },
+  { id: 4, text: 'Chicken', completed: false, completedAt: null },
+];
+
+const ONE_DAY = 24 * 60 * 60 * 1000;
 
 function ListHome() {
-  // mock data
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      text: 'Milk',
-      completed: true,
-      completedAt: Date.now() - 2 * 60 * 60 * 1000,
-      completedBy: {
-        name: 'Doron',
-        avatar: 'https://i.pravatar.cc/30?img=1',
-      },
-    },
-    {
-      id: 2,
-      text: 'Eggs',
-      completed: false,
-      completedAt: null,
-    }, // 2 hrs ago
-    {
-      id: 3,
-      text: 'Bread',
-      completed: false,
-      completedAt: null,
-    }, // 30 hrs ago (should NOT show)
-    { id: 4, text: 'Chicken', completed: false, completedAt: null },
-  ]);
+  const [items, setItems] = useState<TodoItem[]>(INITIAL_ITEMS);
 
-  const handleDotsClick = (id: number | string) => {
-    console.log('Clicked item:', id);
-    // later: open menu, edit, delete, etc.
-  };
+  // ✅ Initialize with Date.now() so you don't need to 'sync' it in useEffect
+  // ✅ Pass a function to useState. React only runs this once on mount.
+  const [now, setNow] = useState(() => Date.now());
 
-  const now = Date.now();
-  const ONE_DAY = 24 * 60 * 60 * 1000;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(Date.now());
+    }, 60000);
 
-  // filter lists
-  const needs = items.filter((item) => !item.completed);
+    return () => clearInterval(interval);
+  }, []);
 
-  const gotIt = items.filter(
-    (item) =>
-      item.completed && item.completedAt && now - item.completedAt <= ONE_DAY
-  );
-
-  // toggle complete
   const currentUser = {
     name: 'Doron',
     avatar: 'https://i.pravatar.cc/30?img=1',
   };
 
-  // @ts-ignore
-  const handleCheck = (id) => {
-    // @ts-ignore
+  const handleDotsClick = (id: number | string) => {
+    console.log('Clicked item:', id);
+  };
+
+  const handleCheck = (id: number | string) => {
     setItems((prev) =>
       prev.map((item) =>
         item.id === id
@@ -70,8 +71,7 @@ function ListHome() {
     );
   };
 
-  // @ts-ignore
-  const formatTime = (timestamp: any) => {
+  const formatTime = (timestamp: number | null) => {
     if (!timestamp) return '';
     return new Date(timestamp).toLocaleTimeString([], {
       hour: '2-digit',
@@ -79,10 +79,18 @@ function ListHome() {
     });
   };
 
+  const needs = items.filter((item) => !item.completed);
+
+  const gotIt = items.filter((item) => {
+    if (!item.completed || !item.completedAt) return false;
+    // This will now work perfectly on the first render
+    return now - item.completedAt <= ONE_DAY;
+  });
+
   return (
     <div className='listPage'>
       <h3>House Need</h3>
-      {/* NEEDS */}
+
       <div className='header-line'>
         <span className='line'></span>
         <p style={{ color: 'red' }}>Needs</p>
@@ -117,7 +125,6 @@ function ListHome() {
         ))}
       </div>
 
-      {/* GOT IT */}
       <div className='header-line'>
         <span className='line'></span>
         <p style={{ color: 'green' }}>Got It</p>
@@ -136,29 +143,20 @@ function ListHome() {
               <div>
                 <p className='completed-text'>{item.text}</p>
                 <div className='meta'>
-                  <img
-                    src={item.completedBy?.avatar}
-                    alt='user'
-                    className='avatar'
-                  />
-                  <span>{item.completedBy?.name}</span>
+                  {item.completedBy && (
+                    <>
+                      <img
+                        src={item.completedBy.avatar}
+                        alt='user'
+                        className='avatar'
+                      />
+                      <span>{item.completedBy.name}</span>
+                    </>
+                  )}
                   <span className='time'>{formatTime(item.completedAt)}</span>
                 </div>
               </div>
             </div>
-
-            {/* <div className="completed-content">
-              <div className="meta">
-                <img
-                  src={item.completedBy?.avatar}
-                  alt="user"
-                  className="avatar"
-                />
-                <span>{item.completedBy?.name}</span>
-                <span className="time">{formatTime(item.completedAt)}</span>
-              </div>
-            </div> */}
-
             <button
               className='dots-btn'
               onClick={() => handleDotsClick(item.id)}
