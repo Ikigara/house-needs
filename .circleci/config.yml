@@ -3,19 +3,15 @@ version: 2.1
 jobs:
   lint:
     docker:
-      - image: cimg/node:22.0
+      - image: cimg/node:22.11
     steps:
       - checkout
 
       - run:
-          name: Setup Corepack + PNPM (FIXED)
+          name: Enable Corepack (NO global install)
           command: |
-            npm install -g corepack@latest
             corepack enable
             corepack prepare pnpm@latest --activate
-
-            echo 'export PATH=$HOME/bin:$PATH' >> $BASH_ENV
-            source $BASH_ENV
 
       - run:
           name: Install dependencies
@@ -27,14 +23,13 @@ jobs:
 
   deploy_preview:
     docker:
-      - image: cimg/node:22.0
+      - image: cimg/node:22.11
     steps:
       - checkout
 
       - run:
-          name: Setup Corepack + PNPM (FIXED)
+          name: Enable Corepack
           command: |
-            npm install -g corepack@latest
             corepack enable
             corepack prepare pnpm@latest --activate
 
@@ -51,14 +46,13 @@ jobs:
 
   deploy_prod:
     docker:
-      - image: cimg/node:22.0
+      - image: cimg/node:22.11
     steps:
       - checkout
 
       - run:
-          name: Setup Corepack + PNPM (FIXED)
+          name: Enable Corepack
           command: |
-            npm install -g corepack@latest
             corepack enable
             corepack prepare pnpm@latest --activate
 
@@ -72,27 +66,3 @@ jobs:
             pnpm dlx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
             pnpm dlx vercel build --prod --token=$VERCEL_TOKEN
             pnpm dlx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
-
-workflows:
-  version: 2
-
-  development:
-    jobs:
-      - lint:
-          filters:
-            branches:
-              only: develop
-
-  preview:
-    jobs:
-      - deploy_preview:
-          filters:
-            branches:
-              only: preview
-
-  production:
-    jobs:
-      - deploy_prod:
-          filters:
-            branches:
-              only: prod
