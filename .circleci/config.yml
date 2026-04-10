@@ -66,3 +66,27 @@ jobs:
             pnpm dlx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
             pnpm dlx vercel build --prod --token=$VERCEL_TOKEN
             pnpm dlx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+workflows:
+  version: 2
+
+  development:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              only: develop
+
+  preview:
+    jobs:
+      - deploy_preview:
+          filters:
+            branches:
+              only: preview
+
+  production:
+    jobs:
+      - deploy_prod:
+          filters:
+            branches:
+              only: prod
