@@ -33,7 +33,9 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: pnpm install
+          command: |
+            corepack enable
+            corepack prepare pnpm@latest --activate
 
       - run:
           name: Deploy to Vercel (Preview)
@@ -87,4 +89,3 @@ workflows:
           filters:
             branches:
               only: prod
-# This CircleCI configuration defines three jobs: `lint`, `deploy_preview`, and `deploy_prod`. The `lint` job runs on the `develop` branch, while the `deploy_preview` and `deploy_prod` jobs run on the `preview` and `prod` branches, respectively. Each job uses a Node.js Docker image, installs dependencies with PNPM, and deploys to Vercel using the Vercel CLI.
