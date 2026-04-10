@@ -2,7 +2,6 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { useState } from 'react';
 import ListHome from './Pages/ListHome';
-// import { requestNotificationPermission } from '../firebase'; // 👈 updated import
 
 function App() {
   const [showForm, setShowForm] = useState(false);

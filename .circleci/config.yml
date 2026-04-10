@@ -1,0 +1,80 @@
+version: 2.1
+
+# 1. Reusable command to handle the environment setup
+commands:
+  setup_env:
+    description: 'Fix Corepack keys, enable pnpm, and install dependencies'
+    steps:
+      - checkout
+      - run:
+          name: Setup pnpm via Corepack
+          command: |
+            # Update Corepack to get the latest security keys (fixes the "keyid" error)
+            sudo npm install -g corepack@latest
+
+            # Enable Corepack (sudo required for system /usr/local/bin)
+            sudo corepack enable
+
+            # Activate the latest version of pnpm
+            corepack prepare pnpm@latest --activate
+      - run:
+          name: Install dependencies
+          command: pnpm install
+
+jobs:
+  lint:
+    docker:
+      - image: cimg/node:22.11
+    steps:
+      - setup_env
+      - run:
+          name: Run linter
+          command: pnpm run lint
+
+  deploy_preview:
+    docker:
+      - image: cimg/node:22.11
+    steps:
+      - setup_env
+      - run:
+          name: Deploy to Vercel (Preview)
+          command: |
+            pnpm dlx vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+            pnpm dlx vercel build --token=$VERCEL_TOKEN
+            pnpm dlx vercel deploy --prebuilt --token=$VERCEL_TOKEN
+
+  deploy_prod:
+    docker:
+      - image: cimg/node:22.11
+    steps:
+      - setup_env
+      - run:
+          name: Deploy to Vercel (Production)
+          command: |
+            pnpm dlx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+            pnpm dlx vercel build --prod --token=$VERCEL_TOKEN
+            pnpm dlx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+workflows:
+  version: 2
+
+  development:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              only: develop
+
+  preview:
+    jobs:
+      - deploy_preview:
+          filters:
+            branches:
+              only: preview
+
+  production:
+    jobs:
+      - deploy_prod:
+          filters:
+            branches:
+              only: prod

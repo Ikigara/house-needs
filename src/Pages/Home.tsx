@@ -1,18 +1,34 @@
-import { useState, useRef } from "react";
-import "../Styles/Home.scss";
+import { useState, useRef, type ReactElement } from 'react';
+import '../Styles/Home.scss';
 
+// 1. Define Interfaces to satisfy TypeScript and ESLint
+interface User {
+  name: string;
+  img: string;
+}
 
-const users = [
-  { name: "Emilia", img: "https://i.pravatar.cc/40?img=2" },
-  { name: "Maja", img: "https://i.pravatar.cc/40?img=3" },
-  { name: "Krzysiek", img: "https://i.pravatar.cc/40?img=4" },
+interface Task {
+  text: string;
+  time: string;
+  user: User;
+  completed: boolean;
+  completedBy: string | null;
+  completedAt: string | null;
+  archived: boolean;
+}
+
+const users: User[] = [
+  { name: 'Emilia', img: 'https://i.pravatar.cc/40?img=2' },
+  { name: 'Maja', img: 'https://i.pravatar.cc/40?img=3' },
+  { name: 'Krzysiek', img: 'https://i.pravatar.cc/40?img=4' },
 ];
 
-function Home() {
-  const [tasks, setTasks] = useState([
+function Home(): ReactElement {
+  // 2. Initialize state with the Task type
+  const [tasks, setTasks] = useState<Task[]>([
     {
-      text: "Buy almond milk",
-      time: "Today • 17:00",
+      text: 'Buy almond milk',
+      time: 'Today • 17:00',
       user: users[0],
       completed: false,
       completedBy: null,
@@ -22,9 +38,9 @@ function Home() {
   ]);
 
   const [showModal, setShowModal] = useState(false);
-  const [taskText, setTaskText] = useState("");
-  const [selectedUser, setSelectedUser] = useState(users[0]);
-  const [dueDate, setDueDate] = useState("Today");
+  const [taskText, setTaskText] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User>(users[0]);
+  const [dueDate, setDueDate] = useState('Today');
 
   const touchStartX = useRef(0);
 
@@ -44,7 +60,7 @@ function Home() {
       },
     ]);
 
-    setTaskText("");
+    setTaskText('');
     setShowModal(false);
   };
 
@@ -53,10 +69,9 @@ function Home() {
 
     if (!updated[index].completed) {
       updated[index].completed = true;
-      // @ts-ignore
+      // No longer need @ts-expect-error because we typed 'completedBy' as string | null
       updated[index].completedBy = selectedUser.name;
-      // @ts-ignore
-      updated[index].completedAt = "Today";
+      updated[index].completedAt = 'Today';
     } else {
       updated[index].completed = false;
       updated[index].completedBy = null;
@@ -66,11 +81,12 @@ function Home() {
     setTasks(updated);
   };
 
-  const handleTouchStart = (e: any) => {
+  // 3. Replace 'any' with proper React Touch Events
+  const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
 
-  const handleTouchEnd = (e: any, index: number) => {
+  const handleTouchEnd = (e: React.TouchEvent, index: number) => {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
 
     // Swipe left threshold
@@ -85,80 +101,79 @@ function Home() {
   };
 
   return (
-    <div className="app">
-      <header className="header">
+    <div className='app'>
+      <header className='header'>
         <h1>
           Room<span>mmeez</span>
         </h1>
       </header>
 
-      <section className="section">
+      <section className='section'>
         <h3>Tasks</h3>
 
-        <div className="tasks">
+        <div className='tasks'>
           {tasks
             .filter((t) => !t.archived)
             .map((task, i) => (
               <div
                 key={i}
-                className={`task ${task.completed ? "done" : ""}`}
+                className={`task ${task.completed ? 'done' : ''}`}
                 onTouchStart={handleTouchStart}
                 onTouchEnd={(e) => handleTouchEnd(e, i)}
               >
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={task.completed}
                   onChange={() => toggleTask(i)}
                 />
 
                 <div>
-                  <p className={task.completed ? "completed" : ""}>
+                  <p className={task.completed ? 'completed' : ''}>
                     {task.text}
                   </p>
 
                   {!task.completed && <span>{task.time}</span>}
 
                   {task.completed && (
-                    <span className="completed-meta">
+                    <span className='completed-meta'>
                       Completed {task.completedAt} by {task.completedBy}
                     </span>
                   )}
                 </div>
 
-                <img src={task.user.img} />
+                <img src={task.user.img} alt={task.user.name} />
               </div>
             ))}
         </div>
       </section>
 
-      {/* Add Button */}
-      <button className="fab" onClick={() => setShowModal(true)}>
+      <button className='fab' onClick={() => setShowModal(true)}>
         +
       </button>
 
-      {/* Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className='modal-overlay' onClick={() => setShowModal(false)}>
+          <div className='modal' onClick={(e) => e.stopPropagation()}>
             <h3>Task</h3>
 
             <input
-              className="input"
-              placeholder="Task name..."
+              className='input'
+              placeholder='Task name...'
               value={taskText}
               onChange={(e) => setTaskText(e.target.value)}
             />
 
             <h4>Person assigned</h4>
-            <div className="avatars">
+            <div className='avatars'>
               {users.map((user, i) => (
                 <img
                   key={i}
                   src={user.img}
+                  alt={user.name}
                   className={
                     selectedUser.name === user.name
-                      ? "avatar selected"
-                      : "avatar"
+                      ? 'avatar selected'
+                      : 'avatar'
                   }
                   onClick={() => setSelectedUser(user)}
                 />
@@ -166,11 +181,11 @@ function Home() {
             </div>
 
             <h4>Due Date</h4>
-            <div className="dates">
-              {["Today", "Tomorrow", "Custom"].map((d) => (
+            <div className='dates'>
+              {['Today', 'Tomorrow', 'Custom'].map((d) => (
                 <button
                   key={d}
-                  className={dueDate === d ? "date active" : "date"}
+                  className={dueDate === d ? 'date active' : 'date'}
                   onClick={() => setDueDate(d)}
                 >
                   {d}
@@ -178,7 +193,7 @@ function Home() {
               ))}
             </div>
 
-            <button className="add-btn" onClick={addTask}>
+            <button className='add-btn' onClick={addTask}>
               Add Task
             </button>
           </div>
