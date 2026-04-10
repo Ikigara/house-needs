@@ -1,22 +1,27 @@
 version: 2.1
 
+# 1. Define reusable logic to keep the config DRY (Don't Repeat Yourself)
+commands:
+  setup_env:
+    description: 'Enable corepack, install pnpm, and install dependencies'
+    steps:
+      - checkout
+      - run:
+          name: Enable Corepack & pnpm
+          command: |
+            # sudo is required to modify /usr/local/bin in cimg/node images
+            sudo corepack enable
+            corepack prepare pnpm@latest --activate
+      - run:
+          name: Install dependencies
+          command: pnpm install
+
 jobs:
   lint:
     docker:
       - image: cimg/node:22.11
     steps:
-      - checkout
-
-      - run:
-          name: Enable Corepack (NO global install)
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest --activate
-
-      - run:
-          name: Install dependencies
-          command: pnpm install
-
+      - setup_env
       - run:
           name: Run linter
           command: pnpm run lint
@@ -25,18 +30,7 @@ jobs:
     docker:
       - image: cimg/node:22.11
     steps:
-      - checkout
-
-      - run:
-          name: Enable Corepack
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest --activate
-
-      - run:
-          name: Install dependencies
-          command: pnpm install
-
+      - setup_env
       - run:
           name: Deploy to Vercel (Preview)
           command: |
@@ -48,18 +42,7 @@ jobs:
     docker:
       - image: cimg/node:22.11
     steps:
-      - checkout
-
-      - run:
-          name: Enable Corepack
-          command: |
-            corepack enable
-            corepack prepare pnpm@latest --activate
-
-      - run:
-          name: Install dependencies
-          command: pnpm install
-
+      - setup_env
       - run:
           name: Deploy to Vercel (Production)
           command: |
@@ -69,7 +52,6 @@ jobs:
 
 workflows:
   version: 2
-
   development:
     jobs:
       - lint:
