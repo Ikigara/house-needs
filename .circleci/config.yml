@@ -1,16 +1,21 @@
 version: 2.1
 
-# 1. Define reusable logic to keep the config DRY (Don't Repeat Yourself)
+# 1. Reusable command to handle the environment setup
 commands:
   setup_env:
-    description: 'Enable corepack, install pnpm, and install dependencies'
+    description: 'Fix Corepack keys, enable pnpm, and install dependencies'
     steps:
       - checkout
       - run:
-          name: Enable Corepack & pnpm
+          name: Setup pnpm via Corepack
           command: |
-            # sudo is required to modify /usr/local/bin in cimg/node images
+            # Update Corepack to get the latest security keys (fixes the "keyid" error)
+            sudo npm install -g corepack@latest
+
+            # Enable Corepack (sudo required for system /usr/local/bin)
             sudo corepack enable
+
+            # Activate the latest version of pnpm
             corepack prepare pnpm@latest --activate
       - run:
           name: Install dependencies
@@ -52,6 +57,7 @@ jobs:
 
 workflows:
   version: 2
+
   development:
     jobs:
       - lint:
