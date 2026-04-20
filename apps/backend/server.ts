@@ -1,4 +1,5 @@
-import { createHouseNeedsApp } from './app';
+// FIXME: should not be using .js extension here, but ts-node is not resolving it correctly without it
+import { createHouseNeedsApp } from './app.js';
 
 const app = createHouseNeedsApp();
 
