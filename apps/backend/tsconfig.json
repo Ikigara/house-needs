@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    /* Target modern Node runtime */
+    "target": "ES2022",
+    "lib": ["ES2023"],
+
+    /* Module system (Node-native ESM support) */
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    /* Output */
+    "outDir": "dist",
+    "rootDir": ".",
+    "sourceMap": true,
+
+    /* Interop + imports */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Quality of life */
+    "skipLibCheck": true,
+
+    /* Node types */
+    "types": ["node"]
+  },
+
+  "include": ["app.ts"],
+  "exclude": ["node_modules", "dist"],
+
+  "ts-node": {
+    "esm": true
+  }
+}

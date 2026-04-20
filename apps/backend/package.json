@@ -1,0 +1,19 @@
+{
+  "name": "@house-needs/backend",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -e ts -w . -x pnpm run watch:serve",
+    "watch:serve": "node --loader ts-node/esm node.ts"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  }
+}
